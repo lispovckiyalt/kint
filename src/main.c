@@ -16,8 +16,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#define _GNU_SOURCE
-
 #include <stdio.h>
 #include <string.h>
 
@@ -34,43 +32,7 @@
 #include <fcntl.h>
 #include <signal.h>
 
-#define MAX_HN_LEN 64
-
-int
-change_hn()
-{
-    FILE *ehn = fopen("/etc/hostname", "r");
-    if (ehn == 0x0)
-    {
-        return 1;
-    }
-
-    char buffer[MAX_HN_LEN];
-
-    if (fgets(buffer, sizeof(buffer), ehn) == NULL)
-    {
-        fclose(ehn);
-        return 1;
-    }
-    fclose(ehn);
-
-    size_t length = strlen(buffer);
-    if (length > 0 && buffer[length - 1] == '\n') 
-    {
-        buffer[length - 1] = '\0';
-        length--;
-    }
-
-    if(length==0)
-    {
-        return 1;
-    }
-
-    if (sethostname(buffer, length) == 0)
-    {
-        return 0;
-    } else { return 1; }
-}
+#include "hostname.h"
 
 static void 
 mount_vfs(const char * name, const char * dir, const char * filesystem, unsigned long rights)
@@ -138,11 +100,12 @@ main(void)
     mount_vfs("tmpfs","/run","tmpfs",MS_NOSUID | MS_NODEV);
     mount_vfs("tmpfs","/tmp","tmpfs",MS_NOSUID | MS_NODEV);
 
-    if (change_hn() != 0)
+    if (change_hostname() != 0)
     {
         perror("kint: something went wrong");
         sethostname("localhost", 9);
     }
+
     reboot(RB_DISABLE_CAD);
 
     char *shell_argv[] = { "/bin/bash", NULL };

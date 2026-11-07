@@ -24,9 +24,8 @@ For example, from a shell: `kill -TERM 1`.
 ## Building
 
 ```sh
-gcc -static -O2 -o init main.c
-# or with musl for a much smaller binary:
-musl-gcc -static -O2 -o init main.c
+cmake -S . -B build
+cmake --build build
 ```
 
 ## Testing in QEMU
@@ -39,7 +38,7 @@ cp /usr/bin/busybox rootfs/bin/        # must be a static busybox
 (cd rootfs && find . | cpio -o -H newc | gzip > ../initramfs.gz)
 
 qemu-system-x86_64 -kernel /boot/vmlinuz-linux -initrd initramfs.gz \
-    -append "console=ttyS0 rdinit=/init" -nographic -m 512
+    -append "console=ttyS0 rdinit=/int" -nographic -m 512
 ```
 
 Use `rdinit=` when booting from an initramfs and `init=` when booting from a disk.
