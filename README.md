@@ -24,9 +24,9 @@ For example, from a shell: `kill -TERM 1`.
 ## Building
 
 ```sh
-gcc -static -O2 -o init init.c
+gcc -static -O2 -o init main.c
 # or with musl for a much smaller binary:
-musl-gcc -static -O2 -o init init.c
+musl-gcc -static -O2 -o init main.c
 ```
 
 ## Testing in QEMU
