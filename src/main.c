@@ -17,7 +17,6 @@
  */
 
 #include <stdio.h>
-#include <string.h>
 
 #include <sys/stat.h>
 #include <sys/mount.h>
@@ -27,24 +26,11 @@
 #include <sys/wait.h>
 
 #include <unistd.h>
-
-#include <errno.h>
-#include <fcntl.h>
 #include <signal.h>
+#include <fcntl.h>
 
 #include "hostname.h"
-
-static void 
-mount_vfs(const char * name, const char * dir, const char * filesystem, unsigned long rights)
-{
-    mkdir(dir, 0755);
-
-    if (mount(name, dir, filesystem, rights, (char *)0x0) < 0 && errno != EBUSY)
-    {
-        fprintf(stderr, "kint: mount: %s: %s\n", 
-                dir, strerror(errno));
-    }
-}
+#include "mount.h"
 
 static pid_t spawn(const char* exe, char *const argv[])
 {
@@ -93,12 +79,7 @@ main(void)
     sigaddset(&set, SIGUSR2);   
     sigprocmask(SIG_BLOCK, &set, NULL);
 
-    mount_vfs("proc", "/proc", "proc", MS_NOSUID | MS_NODEV | MS_NOEXEC);
-    mount_vfs("sysfs", "/sys", "sysfs", MS_NOSUID | MS_NODEV | MS_NOEXEC);
-    mount_vfs("devtmpfs", "/dev", "devtmpfs", MS_NOSUID);
-    mount_vfs("devpts","/dev/pts","devpts",MS_NOSUID | MS_NOEXEC);
-    mount_vfs("tmpfs","/run","tmpfs",MS_NOSUID | MS_NODEV);
-    mount_vfs("tmpfs","/tmp","tmpfs",MS_NOSUID | MS_NODEV);
+    mount_allvfs();
 
     if (change_hostname() != 0)
     {
