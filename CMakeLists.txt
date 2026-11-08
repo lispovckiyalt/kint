@@ -9,6 +9,10 @@ set(SOURCES
     src/main.c
 
     src/hostname/change_hostname.c
+
+
+    src/mount/mount_vfs.c
+    src/mount/mount_allvfs.c
 )
 
 add_executable(kint ${SOURCES})
