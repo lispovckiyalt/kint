@@ -31,37 +31,7 @@
 
 #include "hostname.h"
 #include "mount.h"
-
-static pid_t spawn(const char* exe, char *const argv[])
-{
-    pid_t pid = fork();
-
-    if (pid == 0)
-    {
-        setsid();
-        int fd = open("/dev/console", O_RDWR);
-
-        if (fd >= 0)
-        {
-            ioctl(fd, TIOCSCTTY, 1);
-
-            for (int i = 0; i < 3; i++)
-            {
-                dup2(fd, i);
-            }
-
-            if (fd > 2) close(fd);
-        }
-
-        sigset_t empty; 
-        sigemptyset(&empty);
-        sigprocmask(SIG_SETMASK, &empty, NULL);
-        execv(exe, argv);
-        _exit(127);
-    }
-
-    return pid;
-}
+#include "spawn.h"
 
 int 
 main(void)
