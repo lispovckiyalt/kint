@@ -13,6 +13,8 @@ set(SOURCES
 
     src/mount/mount_vfs.c
     src/mount/mount_allvfs.c
+
+    src/spawn/spawn.c
 )
 
 add_executable(kint ${SOURCES})
