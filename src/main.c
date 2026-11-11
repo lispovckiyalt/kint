@@ -74,6 +74,7 @@ main(void)
             {
                 if (p == openshell)
                 {
+                    sleep(1);
                     openshell = spawn("/bin/bash", shell_argv);
                 }
             }
