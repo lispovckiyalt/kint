@@ -49,5 +49,5 @@ change_hostname()
     if (leng == 0) { return 1; }
 
     if (sethostname(buffer, leng) == 0) { return 0; }
-    else { perror("kint:  something went wrong"); sethostname("localhost", 9) }
+    else { perror("kint:  something went wrong"); sethostname("localhost", 9); return 1; }
 }
