@@ -50,12 +50,7 @@ main(void)
     sigprocmask(SIG_BLOCK, &set, NULL);
 
     mount_allvfs();
-
-    if (change_hostname() != 0)
-    {
-        perror("kint: something went wrong");
-        sethostname("localhost", 9);
-    }
+    change_hostname();
 
     reboot(RB_DISABLE_CAD);
 
@@ -63,6 +58,7 @@ main(void)
     pid_t openshell = spawn("/bin/bash", shell_argv);
 
     int cmd = 0;
+
     for (;;)
     {
         int mask;
